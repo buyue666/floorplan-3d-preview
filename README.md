@@ -50,6 +50,24 @@ uvicorn main:app --reload --port 8000
 
 ---
 
+## Validate a plan from the terminal
+
+The same `analyzeFloorPlan` pipeline the UI runs, exposed as a CLI (handy for pre-flighting
+a survey export, reproducing a browser bug, or gating CI):
+
+```bash
+npm run validate -- --list
+npm run validate -- --preset courtyard-villa
+npm run validate -- examples/plan-mm-courtyard.json
+npm run validate -- plan.json --units mm --wall-height 2.9 --json
+npm run validate -- --preset bowtie        # exits 1 on purpose
+```
+
+Exit code `0` = validated, `1` = rejected (with the error code and hint printed), so it
+can gate a pipeline directly.
+
+---
+
 ## Why the geometry core is the product
 
 `lib/geometry` is plain TypeScript, has no React or three.js imports, and is the only
@@ -238,6 +256,8 @@ lib/
   export/glb.ts             export group + GLTFExporter
   supabase/                 client, config, storage helpers
   workspace/planText.ts     "x, y" text ⇄ RawFloorPlan
+scripts/validate-plan.ts    CLI: validate a JSON plan, exit 0 / 1
+examples/                   sample millimetre plan with a courtyard
 backend/main.py             FastAPI stub (501)
 supabase/schema.sql         tables, RLS, buckets
 ```
